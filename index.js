@@ -9,7 +9,7 @@ const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
 const multer = require("multer");
 const path = require("path");
-let port = process.env.PORT || 3000;
+let port = process.env.port || 3000;
 
 dotenv.config();
 app.use(express.json());

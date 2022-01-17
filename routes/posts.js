@@ -38,7 +38,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//DELETE POST
+//DELETE post by id
 router.delete("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);

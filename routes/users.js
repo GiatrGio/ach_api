@@ -3,7 +3,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const bcrypt = require("bcrypt");
 
-//UPDATE
+//UPDATE USER by id
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
     if (req.body.password) {
@@ -27,7 +27,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//DELETE
+//DELETE user by id
 router.delete("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
     try {
@@ -56,6 +56,17 @@ router.get("/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+//CHECK IF USER EXISTS BY USERNAME
+router.get("/username/:username",(req, res) => {
+  User.exists({username:req.params.username}, (error, data) => {
+    if(!error) {
+      res.status(200).json(data);
+    }else{
+      console.log(error)
+    }
+  });
 });
 
 module.exports = router;
