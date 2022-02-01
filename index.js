@@ -9,7 +9,6 @@ const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
 const multer = require("multer");
 const path = require("path");
-let port = process.env.port || 3000;
 
 dotenv.config();
 app.use(express.json());
@@ -45,6 +44,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 // Check
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+
 app.listen(port, () => {
-  console.log('Backendddd is running on port ${port}.');
+  console.log('Backendddd is running on port ' + port);
 });
