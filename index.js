@@ -44,7 +44,7 @@ app.use("/category", categoryRoute);
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-
+// Check
 app.listen(port, () => {
   console.log('Backend is running on port ${port}.');
 });
