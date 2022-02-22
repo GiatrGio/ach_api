@@ -1,12 +1,16 @@
 const express = require("express");
 var cors = require('cors')
 const app = express();
+const fs = require('fs')
+const util = require('util')
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
+const recipeRoute = require("./routes/recipes")
 const categoryRoute = require("./routes/categories");
+const { uploadFile, getFileStream } = require('./s3')
 const multer = require("multer");
 const path = require("path");
 
@@ -29,15 +33,28 @@ const storage = multer.diskStorage({
   },
 });
 
-
 const upload = multer({ storage: storage });
-app.post("/upload", upload.single("file"), (req, res) => {
+
+app.get('/image/:key', (req, res) => {
+  const key = req.params.key
+  const readStream = getFileStream(key)
+  readStream.pipe(res)
+})
+
+const unlinkFile = util.promisify(fs.unlink)
+app.post("/upload", upload.single("file"), async (req, res) => {
+  const file = req.file
+  console.log(file)
+  const result = await uploadFile(file);
+  await unlinkFile(file.path)
+  console.log(result)
   res.status(200).json("File has been uploaded");
 });
 
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
+app.use("/recipe", recipeRoute)
 app.use("/category", categoryRoute);
 
 app.get('/', (req, res) => {
@@ -50,5 +67,5 @@ if (port == null || port == "") {
 }
 
 app.listen(port, () => {
-  console.log('Backendddd is running on port ' + port);
+  console.log('Backend is running on port ' + port);
 });
